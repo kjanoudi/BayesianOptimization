@@ -73,26 +73,37 @@ class SequentialDomainReductionTransformer(DomainTransformer):
 
         # setting the previous
         self.previous_optimal = self.current_optimal
+        print(f"Update: previous_optimal: {self.previous_optimal} ({type(self.previous_optimal)})")
         self.previous_d = self.current_d
+        print(f"Update: previous_d: {self.previous_d} ({type(self.previous_d)})")
 
+        print(f"Update: target_space.params: {target_space.params} ({type(target_space.params)})")
         self.current_optimal = target_space.params[
             np.argmax(target_space.target)
         ]
+        print(f"Update: np.argmax(target_space.target): {np.argmax(target_space.target)} ({type(np.argmax(target_space.target))})")
+        print(f"Update: current_optimal: {self.current_optimal} ({type(self.current_optimal)})")
 
         self.current_d = 2.0 * (self.current_optimal -
                                 self.previous_optimal) / self.r
+        print(f"Update: current_d: {self.current_d} ({type(self.current_d)})")
 
         self.c = self.current_d * self.previous_d
+        print(f"Update: c: {self.c} ({type(self.c)})")
 
         self.c_hat = np.sqrt(np.abs(self.c)) * np.sign(self.c)
+        print(f"Update: c_hat: {self.c_hat} ({type(self.c_hat)})")
 
         self.gamma = 0.5 * (self.gamma_pan * (1.0 + self.c_hat) +
                             self.gamma_osc * (1.0 - self.c_hat))
+        print(f"Update: gamma: {self.gamma} ({type(self.gamma)})")
 
         self.contraction_rate = self.eta + \
             np.abs(self.current_d) * (self.gamma - self.eta)
+        print(f"Update: contraction_rate: {self.contraction_rate} ({type(self.contraction_rate)})")
 
         self.r = self.contraction_rate * self.r
+        print(f"Update: self.r: {self.r} ({type(self.r)})")
 
     def _trim(self, new_bounds: np.array, global_bounds: np.array) -> np.array:
         for i, variable in enumerate(new_bounds):
